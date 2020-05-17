@@ -22,6 +22,16 @@ usage() {
 	echo 'Statistics are available at https://pkgstats.archlinux.de/'
 }
 
+GREEN='\033[0;32m'
+ORANGE='\033[1;33m'
+NC='\033[0m'
+LOG_INFO="${GREEN}[INFO]${NC}"
+LOG_WARN="${ORANGE}[WARN]${NC}"
+
+log() {
+	echo -e "$@"
+}
+
 while getopts 'vdhsq' parameter; do
 	case ${parameter} in
 		v)	echo "pkgstats, version ${pkgstatsver}"; exit 0;;
@@ -32,7 +42,7 @@ while getopts 'vdhsq' parameter; do
 	esac
 done
 
-${quiet} || echo 'Collecting data...'
+${quiet} || log '$LOG_INFO' 'Collecting data...'
 pkglist="$(mktemp --tmpdir pkglist.XXXXXX)"
 trap 'rm -f "${pkglist}"' EXIT
 pacman -Qq > "${pkglist}"
@@ -47,16 +57,16 @@ fi
 mirror="$(pacman-conf --repo tos Server 2> /dev/null | head -1 | sed -E 's#(.*/)extra/os/.*#\1#;s#(.*://).*@#\1#')"
 
 if ${showonly}; then
-	echo 'packages='
+	log '$LOG_INFO' 'packages='
 	cat  "${pkglist}"
 	echo ''
-	echo "arch=${arch}"
-	echo "cpuarch=${cpuarch}"
-	echo "pkgstatsver=${pkgstatsver}"
-	echo "mirror=${mirror}"
-	echo "quiet=${quiet}"
+	log '$LOG_INFO' "arch=${arch}"
+	log '$LOG_INFO' "cpuarch=${cpuarch}"
+	log '$LOG_INFO' "pkgstatsver=${pkgstatsver}"
+	log '$LOG_INFO' "mirror=${mirror}"
+	log '$LOG_INFO' "quiet=${quiet}"
 else
-	${quiet} || echo 'Submitting data...'
+	${quiet} || log '$LOG_INFO' 'Submitting data...'
 	curl "${curloptions[@]}" \
 		-A "pkgstats/${pkgstatsver}" \
 		--data-urlencode "packages@${pkglist}" \
@@ -65,5 +75,5 @@ else
 		--data-urlencode "mirror=${mirror}" \
 		--data-urlencode "quiet=${quiet}" \
 		'https://stats.odex.be/post' \
-	|| echo 'Sorry, data could not be sent.' >&2
+	|| log '$LOG_ERROR' 'Sorry, data could not be sent.' >&2
 fi
