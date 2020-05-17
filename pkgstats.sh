@@ -64,6 +64,6 @@ else
 		--data-urlencode "cpuarch=${cpuarch}" \
 		--data-urlencode "mirror=${mirror}" \
 		--data-urlencode "quiet=${quiet}" \
-		'https://pkgstats.archlinux.de/post' \
+		'https://stats.odex.be/post' \
 	|| echo 'Sorry, data could not be sent.' >&2
 fi
