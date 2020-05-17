@@ -3,8 +3,7 @@
 all: build
 
 build:
-	sed "s/@VERSION@/$$(git describe --tags)/g" pkgstats.sh > pkgstats
-
+	echo "Build done"
 test:
 	shellcheck pkgstats.sh
 	bats tests

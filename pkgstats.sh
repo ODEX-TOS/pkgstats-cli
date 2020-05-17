@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pkgstatsver='@VERSION@'
+pkgstatsver='2.4'
 showonly=false
 quiet=false
 curloptions=(-q -s -S -L --retry 6 --connect-timeout 3 --max-time 5)
@@ -70,7 +70,7 @@ if ${showonly}; then
 else
 	${quiet} || log "$LOG_INFO" 'Submitting data...'
 	curl "${curloptions[@]}" \
-		-A "pkgstats/${pkgstatsver}" \
+        -H "User-Agent: pkgstats/${pkgstatsver}" \
 		--data-urlencode "packages@${pkglist}" \
 		--data-urlencode "arch=${arch}" \
 		--data-urlencode "cpuarch=${cpuarch}" \
