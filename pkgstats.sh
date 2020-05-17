@@ -44,7 +44,7 @@ if [[ -f /proc/cpuinfo ]]; then
 else
 	cpuarch=''
 fi
-mirror="$(pacman-conf --repo extra Server 2> /dev/null | head -1 | sed -E 's#(.*/)extra/os/.*#\1#;s#(.*://).*@#\1#')"
+mirror="$(pacman-conf --repo tos Server 2> /dev/null | head -1 | sed -E 's#(.*/)extra/os/.*#\1#;s#(.*://).*@#\1#')"
 
 if ${showonly}; then
 	echo 'packages='
