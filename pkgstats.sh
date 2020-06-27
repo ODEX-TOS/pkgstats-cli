@@ -47,6 +47,7 @@ done
 CONF="$HOME/.config/tos/general.conf"
 # check to see if opt out is enabled
 OPT_OUT="0"
+# shellcheck disable=SC2086
 [[ -f "$CONF" ]] && OPT_OUT="$(grep '^\s*pkg_opt_out=.*' $CONF | cut -d'=' -f2 | sed 's/\"//g')" 
 
 if [[ "$OPT_OUT" == "1" ]]; then
