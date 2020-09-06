@@ -44,16 +44,20 @@ while getopts 'vdhsq' parameter; do
 	esac
 done
 
-CONF="$HOME/.config/tos/general.conf"
 # check to see if opt out is enabled
 OPT_OUT="0"
-# shellcheck disable=SC2086
-[[ -f "$CONF" ]] && OPT_OUT="$(grep '^\s*pkg_opt_out=.*' $CONF | cut -d'=' -f2 | sed 's/\"//g')" 
 
-if [[ "$OPT_OUT" == "1" ]]; then
-        ${quiet} || log "$LOG_INFO" "You opted out of sending package data. Aborting now"
+for config in "/home/"*"/.config/tos/general.conf"; do
+    user=$(echo "$config" | awk -F "/" '{printf $3}')
+    # shellcheck disable=SC2086
+    OPT_OUT="$(grep '^\s*pkg_opt_out=.*' $config | cut -d'=' -f2 | sed 's/\"//g')" 
+    if [[ "$OPT_OUT" == "1" ]]; then
+        ${quiet} || log "$LOG_INFO" "User: $user opted out of sending package data. Aborting now"
         exit 0
-fi
+    fi
+done
+
+
 
 ${quiet} || log "$LOG_INFO" 'Collecting data...'
 pkglist="$(mktemp --tmpdir pkglist.XXXXXX)"
